@@ -78,8 +78,14 @@ def draw_legend(data, obj):
     if alignment:
         data["current axes"].axis_options.append(f"legend cell align={{{alignment}}}")
 
-    if obj._ncol != 1:
-        data["current axes"].axis_options.append(f"legend columns={obj._ncol}")
+    # NOTE: Fix for newer versions of matplotlib
+    try:
+        ncols = obj._ncols
+    except AttributeError:
+        # backwards-compatibility with matplotlib < 3.6.0
+        ncols = obj._ncol
+    if ncols != 1:
+        data["current axes"].axis_options.append(f"legend columns={ncols}")
 
     # Write styles to data
     if legend_style:
